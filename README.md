@@ -1,6 +1,6 @@
 # SongNull
 
-<video src="https://github.com/Zoroo2626/SongNull/raw/main/assets/BragVid.mp4" controls="controls" width="100%"></video>
+![SongNull Demo](assets/BragVid.mp4)
 
 I had a few thousand old songs cluttering my Spotify library from 2018, and I genuinely couldn't bring myself to click the heart icon on every single one of them to clean it up. The official app doesn't let you bulk-delete.
 
