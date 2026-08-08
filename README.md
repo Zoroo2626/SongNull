@@ -1,5 +1,7 @@
 # SongNull
 
+<video src="./assets/BragVid.mp4" controls width="100%"></video>
+
 I had a few thousand old songs cluttering my Spotify library from 2018, and I genuinely couldn't bring myself to click the heart icon on every single one of them to clean it up. The official app doesn't let you bulk-delete.
 
 So I built SongNull. It's a local-first dashboard to search, select, and batch-delete (or restore) tracks in seconds. 
