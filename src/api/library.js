@@ -10,8 +10,9 @@ export const getSavedTracks = async (limit = 50, offset = 0) => {
 };
 
 export const deleteSavedTracks = async (uris) => {
-  // Spotify API accepts up to 40 URIs at once for deletion via query parameters.
-  const url = `https://api.spotify.com/v1/me/library?uris=${encodeURIComponent(uris.join(','))}`;
+  // Support both track URIs ('spotify:track:ID') and direct track IDs
+  const ids = uris.map(u => (typeof u === 'string' ? u.replace('spotify:track:', '') : u.id || u));
+  const url = `https://api.spotify.com/v1/me/tracks?ids=${encodeURIComponent(ids.join(','))}`;
   const response = await spotifyFetch(url, {
     method: 'DELETE'
   });
@@ -24,7 +25,8 @@ export const deleteSavedTracks = async (uris) => {
 };
 
 export const restoreSavedTracks = async (uris) => {
-  const url = `https://api.spotify.com/v1/me/library?uris=${encodeURIComponent(uris.join(','))}`;
+  const ids = uris.map(u => (typeof u === 'string' ? u.replace('spotify:track:', '') : u.id || u));
+  const url = `https://api.spotify.com/v1/me/tracks?ids=${encodeURIComponent(ids.join(','))}`;
   const response = await spotifyFetch(url, {
     method: 'PUT'
   });
@@ -40,7 +42,7 @@ export const getUserPlaylists = async (limit = 50, offset = 0) => {
 };
 
 export const getPlaylistTracks = async (playlistId, limit = 50, offset = 0) => {
-  const url = `https://api.spotify.com/v1/playlists/${playlistId}/items?limit=${limit}&offset=${offset}&market=from_token`;
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${limit}&offset=${offset}&market=from_token`;
   const response = await spotifyFetch(url);
   if (!response.ok) throw new Error('Failed to fetch playlist tracks');
   return response.json();
@@ -48,7 +50,7 @@ export const getPlaylistTracks = async (playlistId, limit = 50, offset = 0) => {
 
 export const deletePlaylistTracks = async (playlistId, uris) => {
   // API accepts up to 100 tracks per request. uris is an array of objects: { uri: "spotify:track:..." }
-  const url = `https://api.spotify.com/v1/playlists/${playlistId}/items`;
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const response = await spotifyFetch(url, {
     method: 'DELETE',
     body: JSON.stringify({ tracks: uris })
@@ -59,7 +61,7 @@ export const deletePlaylistTracks = async (playlistId, uris) => {
 
 export const restorePlaylistTracks = async (playlistId, uris) => {
   // uris is an array of strings: "spotify:track:..."
-  const url = `https://api.spotify.com/v1/playlists/${playlistId}/items`;
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const response = await spotifyFetch(url, {
     method: 'POST',
     headers: {

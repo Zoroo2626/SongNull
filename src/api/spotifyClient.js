@@ -68,13 +68,10 @@ export async function spotifyFetch(url, options = {}) {
   // Handle 429 Too Many Requests
   if (response.status === 429) {
     const retryAfter = response.headers.get('Retry-After');
-    if (retryAfter) {
-      const waitTime = parseInt(retryAfter, 10) * 1000;
-      console.warn(`Rate limited by Spotify. Waiting ${waitTime}ms before retrying...`);
-      await sleep(waitTime);
-      // Retry after waiting
-      return spotifyFetch(url, config);
-    }
+    const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : 1000;
+    console.warn(`Rate limited by Spotify. Waiting ${waitTime}ms before retrying...`);
+    await sleep(waitTime);
+    return spotifyFetch(url, config);
   }
 
   if (!response.ok) {
